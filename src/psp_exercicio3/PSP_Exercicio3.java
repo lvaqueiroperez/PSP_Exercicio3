@@ -1,11 +1,13 @@
 package psp_exercicio3;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class PSP_Exercicio3 extends Thread {
 
     int cont = 0;
-    public static PSP_Exercicio3[] objetos = new PSP_Exercicio3[5];
+    public static PSP_Exercicio3[] Aobjetos = new PSP_Exercicio3[5];
 
     public PSP_Exercicio3(String str) {
 
@@ -21,11 +23,18 @@ public class PSP_Exercicio3 extends Thread {
 
         while (cont != 5) {
 
-            objetos[cont].start();
+            Aobjetos[cont].start();
+            try {
+                Aobjetos[cont].join();
+            } catch (InterruptedException ex) {
+                Logger.getLogger(PSP_Exercicio3.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
             cont++;
 
-            System.out.println("Comienza hilo " + objetos[cont].getName());
         }
+
+        System.out.println("Acaba Hilo " + getName());
 
     }
 
@@ -33,7 +42,7 @@ public class PSP_Exercicio3 extends Thread {
 
         for (int i = 0; i < 5; i++) {
 
-            PSP_Exercicio3.objetos[i] = new PSP_Exercicio3("SubHilo " + Integer.toString(i));
+            PSP_Exercicio3.Aobjetos[i] = new PSP_Exercicio3("SubHilo " + Integer.toString(i));
 
         }
 
