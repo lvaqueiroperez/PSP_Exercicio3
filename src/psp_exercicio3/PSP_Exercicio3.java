@@ -3,11 +3,11 @@ package psp_exercicio3;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.math.*;
 
 public class PSP_Exercicio3 extends Thread {
 
-    int cont = 0;
-    public static PSP_Exercicio3[] Aobjetos = new PSP_Exercicio3[5];
+    public static int contSubHilos = 0;
 
     public PSP_Exercicio3(String str) {
 
@@ -18,37 +18,55 @@ public class PSP_Exercicio3 extends Thread {
     //run CON MINUS !!!
     @Override
     public void run() {
+        //Si no ponemos una condición, tras crear el primer Hilo se accedería a Run()
+        //para mostrar su nombre y crear otro hilo que también se iniciaría con un start(),
+        //dando lugar a otra ejecución del mismo código de Run(), y así indefinidamente
 
-        System.out.println("Comienza hilo " + getName());
+        PSP_Exercicio3 subhilos = null;
 
-        while (cont != 5) {
+        System.out.println("Comienza " + getName());
 
-            Aobjetos[cont].start();
+        if (contSubHilos != 0) {
+
+            for (int i = 0; i < 10; i++) {
+                System.out.println(getName());
+
+                try {
+                    sleep((int) (Math.random() * (100 - 600) + 600));
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(PSP_Exercicio3.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+            }
+
+        }
+
+        if (contSubHilos < 5) {
+
+            contSubHilos++;
+            subhilos = new PSP_Exercicio3("SUBHILO " + contSubHilos);
+            subhilos.start();
+
+            //Ponemos un join para que se ejecute ese hilo antes de que se
+            //acabe el anterior, y así consecutivamente
             try {
-                Aobjetos[cont].join();
+                subhilos.join();
             } catch (InterruptedException ex) {
                 Logger.getLogger(PSP_Exercicio3.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-            cont++;
-
         }
-
-        System.out.println("Acaba Hilo " + getName());
+        //Como el primer hilo es el "padre" de todos los demás subhilos, éste
+        //será el último que acabe !
+        System.out.println("Acaba hilo " + getName());
 
     }
 
     public static void main(String[] args) {
 
-        for (int i = 0; i < 5; i++) {
+        PSP_Exercicio3 h1 = new PSP_Exercicio3("HILO 1");
 
-            PSP_Exercicio3.Aobjetos[i] = new PSP_Exercicio3("SubHilo " + Integer.toString(i));
-
-        }
-
-        PSP_Exercicio3 h1 = new PSP_Exercicio3("Maria");
         h1.start();
-        System.out.println("Acaba main");
 
     }
 
