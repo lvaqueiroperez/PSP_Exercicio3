@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 import java.math.*;
 
 public class PSP_Exercicio3 extends Thread {
-
+    //solo va si es public static ???
     public static int contSubHilos = 0;
 
     public PSP_Exercicio3(String str) {
